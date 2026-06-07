@@ -1,16 +1,48 @@
-##Project Structure
+## Project Structure
 
+```text
 todo-project/
 │
 ├── Jenkinsfile
 ├── Dockerfile
+├── package.json
+├── package-lock.json
+├── sonar-project.properties
+│
+├── backend/
+│
+├── Kubernetes/
+│   ├── namespace.yaml
+│   ├── deployment.yaml
+│   └── service.yaml
 │
 ├── rbac/
 │   ├── serviceaccount.yaml
 │   ├── role.yaml
-│   └── rolebinding.yaml
+│   ├── rolebinding.yaml
+│   └── secret.yaml
 │
-└── k8s/
-    ├── namespace.yaml
-    ├── deployment.yaml
-    └── service.yaml
+└── .github/
+    └── workflows/
+```
+    
+
+```
+Developer
+   |
+   v
+GitHub
+   |
+   v
+Jenkins
+   |
+   +--> SonarQube
+   +--> Trivy
+   +--> Docker Build
+   +--> DockerHub
+   |
+   +--> kubectl apply
+            |
+            v
+        Kubernetes
+```
