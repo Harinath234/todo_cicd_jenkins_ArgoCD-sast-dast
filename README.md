@@ -1,14 +1,18 @@
 ## Project Structure
 
 ```text
-todo-project
+todo-project/
 │
 ├── Jenkinsfile
 ├── Dockerfile
 │
-└── Kubernetes
-    ├── deployment.yaml
-    └── service.yaml
+├── Kubernetes/
+│   ├── deployment.yaml
+│   └── service.yaml
+│
+└── ansible/
+    └── deploy.yml
+
  ```  
 
 ## Project Flow
@@ -25,12 +29,24 @@ Push Docker Image
   ↓
 Update deployment.yaml
   ↓
-kubectl apply
+Run Ansible Playbook
   ↓
 Kubernetes
 
 ```
 
+
+Difference from Jenkins + Kubernetes
+
+Jenkins + Kubernetes
+
+Jenkins → kubectl apply → Kubernetes
+
+Jenkins + Ansible + Kubernetes
+
+Jenkins → Ansible Playbook → kubectl apply → Kubernetes
+
+In this setup, Jenkins never runs kubectl apply directly. Ansible becomes the deployment tool that performs the Kubernetes deployment
 
 ## Jenkins Credentials Needed
 docker-hub-creds (Username/Password)
