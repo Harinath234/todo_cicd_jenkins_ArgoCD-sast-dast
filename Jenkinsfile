@@ -79,35 +79,28 @@ stage('QUALITY GATE') {
         }
       }
     }
-stage('eks deploy'){
- steps {
-    withKubeConfig(
-      credentialsId: 'kubeconfig',
-      clusterName: 'my-cluster',
-      contextName: 'my-cluster',
-      namespace: 'todons',
-      restrictKubeConfigAccess: false,
-      serverUrl: 'https://71EBBEA6021B1F195E6BA6F54211B023.gr7.us-east-1.eks.amazonaws.com'
-    ) {
-      sh '''
-        echo "🚀 Deploying application via Helm..."
-        echo "📁 Current workspace: $(pwd)"
-        echo "📂 Checking for Helm chart..."
-        ls -l ./helm
-        helm upgrade --install todo-release ./helm \
-          --namespace todons \
-          --set image.repository=${DOCKER_HUB_USER}/${IMAGE_BASE} \
-          --set image.tag=${IMAGE_TAG} \
-          --set service.type=LoadBalancer
 
-        echo "✅ Deployment triggered"
-        sleep 60
-        kubectl get svc -n todons
-      '''
+stage('Deploy with Ansible') {
+    steps {
+        withKubeConfig(
+            credentialsId: 'kubeconfig',
+            clusterName: 'my-cluster',
+            contextName: 'my-cluster',
+            namespace: 'todons',
+            restrictKubeConfigAccess: false,
+            serverUrl: 'https://YOUR-EKS-ENDPOINT'
+        ) {
+            sh """
+            ansible-playbook ansible/deploy.yml \
+              -e image_repo=${DOCKER_HUB_USER}/${IMAGE_BASE} \
+              -e image_tag=${IMAGE_TAG}
+            """
+        }
     }
-  }
 }
 }
+
+
 
   post {
     success {
