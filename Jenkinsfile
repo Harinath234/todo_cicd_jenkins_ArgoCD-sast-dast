@@ -25,7 +25,7 @@ stages {
         }
     }
 
-    stage('Login and Push Image to Dockerhub') {
+    stage('Login and Push Image to DockerHub') {
         steps {
             withCredentials([
                 usernamePassword(
@@ -44,32 +44,26 @@ stages {
 
     stage('Update Deployment YAML') {
         steps {
-            withCredentials([
-                string(credentialsId: 'githubtoken', variable: 'GITHUB_TOKEN')
-            ]) {
-                sh """
-                echo "Updating deployment.yaml..."
+            sh """
+            sed -i 's|image:.*|image: ${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG}|g' Kubernetes/deployment.yaml
 
-                sed -i 's|image:.*|image: ${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG}|g' Kubernetes/deployment.yaml
-
-                cat Kubernetes/deployment.yaml
-
-                git config user.name "jenkins"
-                git config user.email "jenkins@example.com"
-
-                git add Kubernetes/deployment.yaml
-
-                git commit -m "Update image tag to ${IMAGE_TAG}" || echo "No changes to commit"
-
-                git push https://\${GITHUB_TOKEN}@github.com/jadalaramani/todo_cicd_end-end_project.git HEAD:main
-                """
-            }
+            cat Kubernetes/deployment.yaml
+            """
         }
     }
 
-    stage('ArgoCD Sync') {
+    stage('Deploy to Kubernetes') {
         steps {
-            echo 'Git updated successfully. ArgoCD will automatically sync the application.'
+            withCredentials([
+                file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')
+            ]) {
+                sh '''
+                kubectl apply -f Kubernetes/deployment.yaml
+                kubectl apply -f Kubernetes/service.yaml
+
+                kubectl rollout status deployment/todo-app   ## rollout status is the standard command to wait for a deployment to complete successfully
+                '''
+            }
         }
     }
 }
