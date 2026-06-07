@@ -42,7 +42,7 @@
             ]) {
                 sh """
                 echo "Updating deployment.yaml..."
-                sed -i 's|image:.*|image: ${DOCKER_USER}/todo-app:${IMAGE_TAG}|g' Kubernetes/deployment.yaml
+                sed -i 's|image:.*|image: ${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG}|g' Kubernetes/deployment.yaml
                 
                 cat k8s/deployment.yaml
     
