@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+name: todo-app
+
+spec:
+project: default
+
+source:
+repoURL: https://github.com/jadalaramani/todo_cicd_end-end_project.git
+targetRevision: main
+path: Kubernetes
+
+destination:
+server: https://kubernetes.default.svc
+namespace: default
+
+syncPolicy:
+automated:
+prune: true
+selfHeal: true
