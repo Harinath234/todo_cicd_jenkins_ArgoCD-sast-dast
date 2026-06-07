@@ -10,8 +10,8 @@ todo-project/
 │   ├── deployment.yaml
 │   └── service.yaml
 │
-└── ansible/
-    └── deploy.yml
+└── argocd/
+    └── application.yaml
 
  ```  
 
@@ -36,20 +36,26 @@ Kubernetes
 ```
 
 
-Difference from Jenkins + Kubernetes
+## In this setup:
 
-Jenkins + Kubernetes
+Jenkins = Build & update Git
+ArgoCD = Deployment tool
+Kubernetes = Runtime platform
 
-Jenkins → kubectl apply → Kubernetes
+There is no kubectl apply in Jenkins, because ArgoCD performs the deployment after detecting the Git commit.
 
-Jenkins + Ansible + Kubernetes
+## For Jenkins + ArgoCD + Kubernetes (No Helm, No RBAC, No Ansible), Jenkins should:
 
-Jenkins → Ansible Playbook → kubectl apply → Kubernetes
+Build Docker image
 
-In this setup, Jenkins never runs kubectl apply directly. Ansible becomes the deployment tool that performs the Kubernetes deployment
+Push image to Docker Hub
+
+Update deployment.yaml
+
+Commit & push to GitHub
+
+Then ArgoCD automatically detects the Git change and deploys to Kubernetes.
 
 ## Jenkins Credentials Needed
 docker-hub-creds (Username/Password)
 kubeconfig (Secret File)
-
-#This is the simplest production-style CI/CD project without Helm, RBAC, Ansible, or ArgoCD. Jenkins handles the entire deployment directly using kubectl apply.
