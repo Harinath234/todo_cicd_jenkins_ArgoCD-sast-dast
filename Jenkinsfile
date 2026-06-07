@@ -66,7 +66,7 @@ pipeline {
                     file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')
                 ]) {
                     sh '''
-                    kubectl apply -f k8s/namespace.yaml
+                    kubectl apply -f Kubernetes/namespace.yaml
                     kubectl apply -f rbac/
                     '''
                 }
@@ -79,8 +79,8 @@ pipeline {
                     file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')
                 ]) {
                     sh '''
-                    kubectl apply -f k8s/deployment.yaml
-                    kubectl apply -f k8s/service.yaml
+                    kubectl apply -f Kubernetes/deployment.yaml
+                    kubectl apply -f Kubernetes/service.yaml
                     '''
                 }
             }
