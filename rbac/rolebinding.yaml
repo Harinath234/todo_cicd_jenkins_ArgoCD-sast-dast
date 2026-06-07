@@ -9,5 +9,5 @@ roleRef:
   name: app-role 
 subjects:
 - kind: ServiceAccount
-  name: ansible-sa 
+  name: argocd-sa 
   namespace: todons 
