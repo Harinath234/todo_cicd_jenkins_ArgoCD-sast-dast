@@ -29,7 +29,9 @@ Push Docker Image
   ↓
 Update deployment.yaml
   ↓
-Run Ansible Playbook
+Git Commit & Push
+  ↓
+ArgoCD Auto Sync
   ↓
 Kubernetes
 
