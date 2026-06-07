@@ -44,23 +44,30 @@ stages {
 
     stage('Update Deployment YAML') {
         steps {
-            sh """
-            sed -i 's|image:.*|image: ${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG}|g' Kubernetes/deployment.yaml
+            withCredentials([
+                string(credentialsId: 'githubtoken', variable: 'GITHUB_TOKEN')
+            ]) {
+                sh """
+                sed -i 's|image:.*|image: ${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG}|g' Kubernetes/deployment.yaml
 
-            cat Kubernetes/deployment.yaml
-            """
+                cat Kubernetes/deployment.yaml
+
+                git config user.name "jenkins"
+                git config user.email "jenkins@example.com"
+
+                git add Kubernetes/deployment.yaml
+
+                git commit -m "Update image tag to ${IMAGE_TAG}" || echo "No changes to commit"
+
+                git push https://\${GITHUB_TOKEN}@github.com/jadalaramani/todo_cicd_end-end_project.git HEAD:main
+                """
+            }
         }
     }
 
-    stage('Deploy using Ansible') {
+    stage('Trigger ArgoCD') {
         steps {
-            withCredentials([
-                file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')
-            ]) {
-                sh '''
-                ansible-playbook ansible/deploy.yml
-                '''
-            }
+            echo 'Git repository updated successfully. ArgoCD Auto Sync will deploy the application.'
         }
     }
 }
