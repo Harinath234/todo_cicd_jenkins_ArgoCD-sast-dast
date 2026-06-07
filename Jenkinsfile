@@ -52,16 +52,13 @@ stages {
         }
     }
 
-    stage('Deploy to Kubernetes') {
+    stage('Deploy using Ansible') {
         steps {
             withCredentials([
                 file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')
             ]) {
                 sh '''
-                kubectl apply -f Kubernetes/deployment.yaml
-                kubectl apply -f Kubernetes/service.yaml
-
-                kubectl rollout status deployment/todo-app   ## rollout status is the standard command to wait for a deployment to complete successfully
+                ansible-playbook ansible/deploy.yml
                 '''
             }
         }
