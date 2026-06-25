@@ -3,7 +3,7 @@ agent any
 
 ```
 environment {
-    DOCKER_USER = 'harinath93811'
+    DOCKER_USERNAME = 'harinath93811'
     IMAGE_NAME = 'todo-app'
     IMAGE_TAG = "${BUILD_NUMBER}"
     GIT_REPO_NAME = "todo_cicd_jenkins_ArgoCD-sast-dast" 
@@ -40,7 +40,7 @@ stage('QUALITY GATE') {
     stage('Build Image') {
         steps {
             sh '''
-            docker build -t $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG .
+            docker build -t $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG .
             '''
         }
     }
@@ -57,13 +57,13 @@ stage('QUALITY GATE') {
             withCredentials([
                 usernamePassword(
                     credentialsId: 'docker-hub-creds',
-                    usernameVariable: 'DOCKER_USER',
+                    usernameVariable: 'DOCKER_USERNAME',
                     passwordVariable: 'DOCKER_PASS'
                 )
             ]) {
                 sh '''
                 echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                docker push $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG
+                docker push $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG
                 '''
             }
         }
@@ -92,11 +92,7 @@ stage('QUALITY GATE') {
         }
     }
 
-   
-        } 
-    } 
-
-		stage('DAST Scan using OWASP ZAP') {
+	stage('DAST Scan using OWASP ZAP') {
                  steps {
                          sh '''
                                  mkdir -p zap-reports
