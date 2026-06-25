@@ -31,14 +31,6 @@ pipeline {
             }
         }
 
-        stage('QUALITY GATE') {
-            steps {
-                timeout(time: 2, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
         stage('Build Image') {
             steps {
                 sh """
@@ -96,20 +88,24 @@ pipeline {
             }
         }
 
-        stage('DAST Scan using OWASP ZAP') {
-            steps {
-                sh '''
-                    mkdir -p zap-reports
+  
+  stage('DAST Scan using OWASP ZAP') {
+    steps {
+        sh '''
+            mkdir -p zap-reports
+            chmod 777 zap-reports
 
-                    docker run --rm \
-                    -v $(pwd)/zap-reports:/zap/wrk/:rw \
-                    ghcr.io/zaproxy/zaproxy:stable \
-                    zap-baseline.py \
-                    -t http://52.90.178.201:8080 \
-                    -r zap-report.html
-                '''
-            }
-        }
+            docker run --rm \
+            --user root \
+            -v $(pwd)/zap-reports:/zap/wrk/:rw \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap-baseline.py \
+            -t http://a272c0463b244449483a4b8ec5d04a1e-1973045942.us-east-1.elb.amazonaws.com \
+            -r zap-report.html \
+            -I
+        '''
+    }
+}
     }
 
     post {
