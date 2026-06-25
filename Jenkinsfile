@@ -9,7 +9,6 @@ environment {
     GIT_REPO_NAME = "todo_cicd_jenkins_ArgoCD-sast-dast" 
     GIT_USER_NAME = "Harinath234" 
 }
-
 stages {
 
     stage('Checkout') {
