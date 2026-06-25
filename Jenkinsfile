@@ -13,7 +13,7 @@ stages {
     stage('Checkout') {
         steps {
             git branch: 'main',
-            url: 'https://github.com/jadalaramani/todo_cicd_end-end_project.git'
+            url: 'https://github.com/Harinath234/todo_cicd_jenkins_ArgoCD-sast-dast.git'
         }
     }
 
