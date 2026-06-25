@@ -9,8 +9,7 @@ The pipeline uses Jenkins, SonarQube, Docker, Trivy, OWASP ZAP, GitHub, and Kube
 ---
 # DevSecOps Pipeline with SAST & DAST
 
-![DevSecOps Pipeline](image-sast-dast.png)
-
+![DevSecOps Pipeline](Dast-Test-reports/image-sast-dast.png)
 
 # DevSecOps Pipeline Flow
 
